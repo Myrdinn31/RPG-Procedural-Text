@@ -12,7 +12,7 @@ run = ["sh", "-c", "npm run preview"]
 build = ["sh", "-c", "npm run build"]
 
 [workflows]
-runButton = "React Dev Server"
+runButton = "Simple React Server"
 
 [[workflows.workflow]]
 name = "Serve static"
@@ -35,6 +35,19 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Simple React Server"
+author = 5759290
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm start"
 
 [[ports]]
 localPort = 80
