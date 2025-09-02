@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  TIRAGE AU SORT NOËL
+  <p id="display-array"></p>
+  <!-- <ul id="SetList"></ul> -->
+  <script type="text/javascript">
+  	// array to be displayed
+    /* let morceaux = ["Coeur de l'Océan", "La République Pirate", "La Véritable Histoire du Capitaine Crochet", "L'Antre de Davy Jones", "Boire, Occire, Rire", "Le Robin des Mers", "Le Rocher des Pirates", "Birdy", "Frères de Bitte", "Pénurie de Rhum", "La Chasse au Kraken", "Les P'tits Rafiots"];
+    let resultat = [];
+    let resultatTemp;
+    let list = document.getElementById("SetList");
+    let nb = 0;
+
+    if (new URLSearchParams(window.location.search).get('nb') !== null) {
+      nb = new URLSearchParams(window.location.search).get('nb');
+    } else {
+      nb = 12;
+    }
+  
+    for (let i = 0 ; i < nb ; i++) {
+      do {
+        resultatTemp = morceaux[Math.floor(Math.random() * morceaux.length)];
+      } while (resultat.find(morceau => morceau === resultatTemp));
+
+      resultat.push(resultatTemp);
+
+      let li = document.createElement('li');
+      li.innerText = resultatTemp;
+      list.appendChild(li);
+    }
+
+    console.log(resultat); */
+    
+  	let acheteurs = ["Chantal", "Christian", "Manou", "Mathieu", "Monique", "Sonia", "Vincent", "Benjamin", "Laëtitia"];
+    let receveurs = ["Chantal", "Christian", "Manou", "Mathieu", "Monique", "Sonia", "Vincent", "Benjamin", "Laëtitia"];
+    let resultat = [];
+    let resultatTemp;
+    let tirageAcheteurs = 0;
+    let tirageReceveurs = 0;
+  
+    for (let i = 0 ; i < 9 ; i++) {
+      resultatTemp = {
+        "acheteur": "", 
+        "receveur": ""
+      };
+      
+      tirageAcheteurs =  Math.floor(Math.random() * acheteurs.length);
+      resultatTemp.acheteur = acheteurs[tirageAcheteurs];
+  
+      do {
+        tirageReceveurs =  Math.floor(Math.random() * receveurs.length);
+      } while (receveurs[tirageReceveurs] === acheteurs[tirageAcheteurs]);
+  
+      resultatTemp.receveur = receveurs[tirageReceveurs];
+  
+      acheteurs.splice(tirageAcheteurs, 1);
+      receveurs.splice(tirageReceveurs, 1);
+  
+      resultat.push(resultatTemp);
+    }
+  
+  resultat.forEach(cadeau => document.getElementById("display-array").innerHTML += "<br>" + Object.values(cadeau).join(" offre un cadeau à "));
+  </script>
+
+ <!--
+  This script places a badge on your repl's full-browser view back to your repl's cover
+  page. Try various colors for the theme: dark, light, red, orange, yellow, lime, green,
+  teal, blue, blurple, magenta, pink!
+  -->
+  <script src="https://replit.com/public/js/replit-badge.js" theme="blue" defer></script> 
+</body>
+
+</html>
