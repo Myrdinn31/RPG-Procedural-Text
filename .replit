@@ -56,19 +56,18 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Serveur Flask"
+args = "Exécuter Python"
 
 [[workflows.workflow]]
-name = "Serveur Flask"
+name = "Exécuter Python"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python main.py"
-waitForPort = 5000
 
 [workflows.workflow.metadata]
-outputType = "webview"
+outputType = "console"
 
 [[ports]]
 localPort = 80
