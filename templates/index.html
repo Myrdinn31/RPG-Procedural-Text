@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Projet Python/Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bienvenue dans mon projet Python</h1>
+            <p>Une application simple propulsée par Flask</p>
+        </header>
+        
+        <main>
+            <section class="counter-section">
+                <h2>Compteur interactif</h2>
+                <div class="counter-display">
+                    <button id="decrement">-</button>
+                    <span id="counter">0</span>
+                    <button id="increment">+</button>
+                </div>
+            </section>
+            
+            <section class="info-section">
+                <div class="card">
+                    <h3>🐍 Python</h3>
+                    <p>Logique backend robuste avec Flask</p>
+                </div>
+                <div class="card">
+                    <h3>🎨 Design</h3>
+                    <p>Style moderne et responsive</p>
+                </div>
+                <div class="card">
+                    <h3>🚀 Performance</h3>
+                    <p>Développement rapide et efficace</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
