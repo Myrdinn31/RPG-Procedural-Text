@@ -79,6 +79,8 @@ def update_npcs(game_state):
         if npc["hp"] <= 0:
             e.killed_npc(game_state, npc)
 
+    npc_social_phase(game_state)
+
 
 def npc_choose_action(npc, game_state):
     traits = npc["traits"]
@@ -116,9 +118,7 @@ def resolve_npc_action(npc, action, game_state):
     npc_behavior(npc)
     
     if action == "travel":
-        npc["location"] = random.choice(
-            ["route", "village", "ruines"]
-        )
+        move_npc(npc, game_state);
 
         print(f"{npc['name']} va à {npc['location']}.")
     elif action == "fight":
@@ -163,6 +163,13 @@ def react_to_world_event(npc, event):
                 npc["emotions"]["joy"] += 10
 
 
+def move_npc(npc, game_state):
+    current = npc["location"]
+    neighbors = game_state["locations"][current]["neighbors"]
+    
+    npc["location"] = random.choice(neighbors)
+
+
 def get_dominant_emotion(npc):
     return max(npc["emotions"], key=npc["emotions"].get)
 
@@ -183,3 +190,85 @@ def npc_behavior(npc):
 def decay_emotions(npc):
     for emotion in npc["emotions"]:
         npc["emotions"][emotion] *= 0.9
+
+
+def generate_npc_choices(npc):
+    choices = []
+
+    relation = npc["relation_player"]
+    traits = npc["traits"]
+    emotions = npc["emotions"]
+
+    # PNJ agressif
+    if traits["aggressive"] > 4 or emotions["anger"] > 50:
+        choices.append({"text": "Se défendre", "type": "combat_npc"})
+        return choices
+
+    # PNJ ami
+    if relation > 5:
+        choices.append({"text": "Discuter", "type": "talk_npc"})
+        choices.append({"text": "Demander de l'aide", "type": "ask_help"})
+        choices.append({"text": "Voyager ensemble", "type": "recruit_npc"})
+    # PNJ neutre
+    elif -3 <= relation <= 5:
+        choices.append({"text": "Discuter", "type": "talk_npc"})
+        choices.append({"text": "Aider", "type": "help_npc"})
+    # PNJ hostile
+    else:
+        choices.append({"text": "Tenter d'apaiser", "type": "calm_npc"})
+        choices.append({"text": "Combattre", "type": "combat_npc"})
+    # PNJ cupide
+    if traits["greedy"] > 3:
+        choices.append({"text": "Offrir de l'or", "type": "bribe_npc"})
+
+    return choices
+
+
+def npc_social_phase(game_state):
+    npcs = game_state["npcs"]
+
+    for i in range(len(npcs)):
+        for j in range(i + 1, len(npcs)):
+            npc_a = npcs[i]
+            npc_b = npcs[j]
+
+            if not npc_a["alive"] or not npc_b["alive"]:
+                continue
+
+            if npc_a["location"] == npc_b["location"]:
+                if random.random() < 0.25:
+                    npc_interaction(npc_a, npc_b)
+
+
+def npc_interaction(npc_a, npc_b):
+    print(f"{npc_a['name']} rencontre {npc_b['name']}.")
+
+    relation = npc_a["relationships"].get(npc_b["name"], 0)
+
+    # traits
+    aggressive = npc_a["traits"]["aggressive"]
+    greedy = npc_a["traits"]["greedy"]
+
+    # combat
+    if aggressive > 4 and random.random() < 0.4:
+        print("Une bagarre éclate.")
+        npc_b["hp"] -= 3
+        relation -= 3
+    # commerce
+    elif greedy > 3 and random.random() < 0.4:
+        print("Ils échangent des marchandises.")
+        relation += 1
+    # discussion
+    else:
+        print("Ils discutent tranquillement.")
+        relation += 1
+
+    if npc_a["emotions"]["anger"] > 40:
+        relation -= 2
+    if npc_a["emotions"]["joy"] > 40:
+        relation += 2
+
+    npc_a["relationships"][npc_b["name"]] = relation
+    npc_b["relationships"][npc_a["name"]] = relation
+
+    print(f"La relation évolue entre {npc_a['name']} et {npc_b['name']} : {relation}.")

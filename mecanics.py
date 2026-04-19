@@ -18,11 +18,13 @@ def test(stat, difficulty):
 
 def resolve_choice(game_state, event, choice):
     player = game_state["player"]
+    location = player["location"]
+    danger = game_state["locations"][location]["danger"]
 
     if choice["type"] == "combat":
         f.combat(player, {
             "name": "Bandit",
-            "hp": 10,
+            "hp": 5 + danger * 2,
             "attack": 2,
             "faction": "bandits"
         }, game_state)
@@ -113,7 +115,7 @@ def resolve_choice(game_state, event, choice):
         
         f.combat(game_state["player"], {
             "name": npc["name"],
-            "hp": npc["hp"],
+            "hp": npc["hp"] + danger * 2,
             "attack": 2,
             "faction": npc["faction"]
         }, game_state)
@@ -198,3 +200,16 @@ def summarize_history(game_state):
     # for memory in game_state["history"][-5:]:
     for memory in game_state["history"]:
         print(f"Jour {memory['day']} — {memory['text']}")
+
+
+def travel_player(game_state):
+    current = game_state["player"]["location"]
+    neighbors = game_state["locations"][current]["neighbors"]
+
+    print("Où veux-tu aller ?")
+
+    for i, loc in enumerate(neighbors):
+        print(f"{i+1}. {loc}")
+
+    choice = int(input("> ")) - 1
+    game_state["player"]["location"] = neighbors[choice]

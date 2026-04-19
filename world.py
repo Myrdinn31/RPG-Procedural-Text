@@ -12,7 +12,8 @@ game_state = {
         "agility": 2,
         "intelligence": 1,
         "gold": 10,
-        "status": []
+        "status": [],
+        "location": "village"
     },
     "world": {
         "danger_level": 1,
@@ -38,7 +39,33 @@ game_state = {
     },
     "npcs": [],
     "killed_npcs": [],
-    "history": []
+    "history": [],
+    "locations": {
+        "village": {
+            "type": "établissement",
+            "danger": 1,
+            "shops": True,
+            "rest": True,
+            "neighbors": ["route"]
+        },
+        "route": {
+            "type": "route",
+            "danger": 2,
+            "neighbors": ["village", "forêt", "ruines"]
+        },
+        "forêt": {
+            "type": "sauvage",
+            "danger": 3,
+            "neighbors": ["route"]
+        },
+        "ruines": {
+            "type": "donjon",
+            "danger": 5,
+            "monsters": True,
+            "treasure": True,
+            "neighbors": ["route"]
+        }
+    }
 }
 
 

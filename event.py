@@ -6,7 +6,9 @@ import npc as n
 
 event_bandit = {
     "text": "Un bandit surgit sur la route.",
-    "condition": lambda gs: gs["world"]["bandits_active"],
+    "condition": lambda gs:
+        gs["player"]["location"] == "route"
+        and gs["world"]["bandits_active"],
     "weight": 5,
     "choices": [
         {"text": "Combattre", "type": "combat"},
@@ -16,7 +18,8 @@ event_bandit = {
 event_bandit_ambush = {
     "text": "Des bandits te reconnaissent et attaquent.",
     "condition": lambda gs:
-        gs["factions"]["bandits"]["reputation"] <= -5,
+        gs["player"]["location"] == "route"
+        and gs["factions"]["bandits"]["reputation"] <= -5,
     "weight": 4,
     "choices": [
         {"text": "Se battre", "type": "combat"}
@@ -33,7 +36,9 @@ event_traveler = {
 }
 event_ruins = {
     "text": "Tu découvres des ruines anciennes.",
-    "condition": lambda gs: True,
+    "condition": lambda gs:
+        gs["player"]["location"] == "ruines"
+        and True,
     "weight": 2,
     "choices": [
         {"text": "Explorer", "type": "enter_dungeon"}
@@ -42,7 +47,8 @@ event_ruins = {
 event_royal_help = {
     "text": "Un garde royal t'offre son aide.",
     "condition": lambda gs:
-        gs["factions"]["royaume"]["reputation"] >= 5,
+        gs["player"]["location"] in ["route", "village"]
+        and gs["factions"]["royaume"]["reputation"] >= 5,
     "weight": 2,
     "choices": [
         {"text": "Accepter", "type": "heal"}
@@ -83,28 +89,25 @@ def get_all_events(game_state):
 
 def generate_npc_events(game_state):
     events = []
+    player_loc = game_state["player"]["location"]
 
     for npc in game_state["npcs"]:
-        if npc["alive"]:
-            events.append(npc_encounter_event(npc))
+        if npc["alive"] and npc["location"] == player_loc:
+            events.append(npc_encounter_event(npc, player_loc))
 
     return events
 
 
-def npc_encounter_event(npc):
+def npc_encounter_event(npc, location):
     return {
-        "text": f"Tu rencontres {npc['name']} sur la route.",
+        "text": f"Tu rencontres {npc['name']} : {location}.",
         "condition": lambda gs, n=npc: (
             n["alive"]
             and gs["day"] - n["last_seen_day"] > 2
         ),
         "weight": 2,
         "npc": npc,  # IMPORTANT
-        "choices": [
-            {"text": "Parler", "type": "talk_npc"},
-            {"text": "Aider", "type": "help_npc"},
-            {"text": "Attaquer", "type": "combat_npc"}
-        ]
+        "choices": n.generate_npc_choices(npc)
     }
 
 
