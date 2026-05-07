@@ -2,6 +2,7 @@ import world as w
 import npc as n
 import event as e
 import mecanics as m
+import quest as q
 
 
 def main():
@@ -9,12 +10,18 @@ def main():
     w.game_state["npcs"].append(n.create_npc("Elena"))
 
     while True:
+        result, roll = m.fate_check(w.game_state, "very_likely")
+        print(f"Jet: {roll} → {result}")
+        print(m.interpret_result(result))
+
         m.travel_player(w.game_state)
         all_events = e.get_all_events(w.game_state)
         event = e.choose_event(w.game_state, all_events)
         e.play_event(w.game_state, event)
+        q.update_quests(w.game_state)
 
         w.update_world(w.game_state)
+        m.spread_rumors(w.game_state)
         w.game_state["day"] += 1
         print(f"\nJour {w.game_state['day']}")
 

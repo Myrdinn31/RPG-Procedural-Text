@@ -37,6 +37,8 @@ def combat(player, enemy, game_state):
             "fight_win",
             f"Le joueur a tué {enemy['name']}.",
             ["player", {enemy['name']}],
+            game_state["player"]["location"],
+            m.register_witnesses(game_state, game_state["player"]["location"]),
             importance=3
         )
     else:
@@ -47,6 +49,8 @@ def combat(player, enemy, game_state):
             "fight_lose",
             f"{enemy['name']} a tué le joueur.",
             ["player", {enemy['name']}],
+            game_state["player"]["location"],
+            m.register_witnesses(game_state, game_state["player"]["location"]),
             importance=3
         )
 

@@ -65,7 +65,9 @@ game_state = {
             "treasure": True,
             "neighbors": ["route"]
         }
-    }
+    },
+    "quests": [],
+    "chaos_factor": 5
 }
 
 

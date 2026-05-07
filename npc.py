@@ -136,6 +136,8 @@ def resolve_npc_action(npc, action, game_state):
                     "npc_killed",
                     f"{npc['name']} a été tué.",
                     ["player", npc["name"]],
+                    game_state["player"]["location"],
+                    m.register_witnesses(game_state, game_state["player"]["location"]),
                     importance=3
                 )
 
@@ -272,3 +274,14 @@ def npc_interaction(npc_a, npc_b):
     npc_b["relationships"][npc_a["name"]] = relation
 
     print(f"La relation évolue entre {npc_a['name']} et {npc_b['name']} : {relation}.")
+
+
+def npc_react_to_rumors(npc, memory):
+    if npc["name"] in memory["known_by"]:
+        if memory["type"] == "npc_killed":
+            if memory["actors"][1] in npc["relationships"]:
+                relation = npc["relationships"][memory["actors"][1]]
+
+                if relation > 40:
+                    npc["emotions"]["anger"] += 20
+                    npc["emotions"]["sadness"] += 20

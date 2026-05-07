@@ -44,6 +44,8 @@ def explore_dungeon(game_state):
         "dungeon_cleared",
         "Un ancien donjon a été exploré.",
         ["player"],
+        game_state["player"]["location"],
+        m.register_witnesses(game_state, game_state["player"]["location"]),
         importance=3
     )
 
